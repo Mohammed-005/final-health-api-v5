@@ -53,17 +53,18 @@ jobs:
           script: |
 
             aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com
-
-            TARGET_PORT=80
-            CONTAINER_ID=$(docker ps -q --filter "publish=$TARGET_PORT")
-            if [ ! -z "$CONTAINER_ID" ]; then
-              docker stop $CONTAINER_ID
-              docker rm $CONTAINER_ID
-            fi
-
-            docker-compose down --remove-orphans
-
+            cd ~
             docker-compose pull
-
             docker-compose up -d
+
+      - name: Switch traffic to v2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~
+            sed -i 's/app-v1/app-v2' nginx.conf
+            docker exec nginx-container nginx -s reload
 

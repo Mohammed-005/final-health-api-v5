@@ -1,15 +1,27 @@
 services:
-  web-service:
-    image: 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v5
-    container_name: web-app2
-    environment:
-      - REDIS_HOST=redis
+  app-v1:
+    build: .
+    container_name: app-v1-container
     ports:
-      - "80:7000"
-    depends_on:
-      - redis
-  
-  redis:
-    image: redis:7-alpine
-    container_name: redis-backend
+      - "7001:7000"
+    environment:
+      - APP_VERSION=v1
 
+  app-v2:
+    build: .
+    container_name: app-v2-container
+    ports:
+      - "7002:7000"
+    environment:
+      - APP_VERSION=v2
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-container
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/etc/nginx/conf.d/
+    depends_on:
+      - app-v1
+      - app-v2

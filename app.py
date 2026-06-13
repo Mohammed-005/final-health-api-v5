@@ -1,23 +1,17 @@
 import json
 from http.server import BaseHTTPRequestHandler,  HTTPServer
-import redis
 import os
 
 PORT = 7000
-REDIS_HOST = os.environ.get("REDIS_HOST", "redis")
-
-r = redis.Redis(host=REDIS_HOST, port=6379, decode_responses=True)
+APP_VERSION = os.environ.get("APP_VERSION", "development")
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
-            visits = r.incr("visits")
 
             response = {
                     "status": "ok",
-                    "visits": int(visits),
-                    "version": "v5",
-                    "service": "final-practice"
+                    "version": APP_VERSION
                     }
 
             self.send_response(200)
@@ -30,7 +24,7 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
 
 server = HTTPServer(("0.0.0.0", PORT), Handler)
-print(f"Server running on port {PORT}")
+print(f"Application running version {APP_VERSION} on internal port {PORT}")
 server.serve_forever()
 
 
