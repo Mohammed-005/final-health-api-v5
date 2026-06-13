@@ -1,6 +1,6 @@
 services:
   app-v1:
-    build: .
+    build: 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v5
     container_name: app-v1-container
     ports:
       - "7001:7000"
@@ -8,7 +8,7 @@ services:
       - APP_VERSION=v1
 
   app-v2:
-    build: .
+    build: 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v5
     container_name: app-v2-container
     ports:
       - "7002:7000"
