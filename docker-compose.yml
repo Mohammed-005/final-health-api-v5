@@ -1,6 +1,6 @@
 services:
   web-service:
-    image: image: 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v5
+    image: 337405469571.dkr.ecr.ap-southeast-2.amazonaws.com/health-api:v5
     container_name: web-app2
     environment:
       - REDIS_HOST=redis
